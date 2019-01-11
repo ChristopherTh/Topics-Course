@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import UnivariateSpline
 import numpy as np
 
-Path = "D:/Topics/Daten/7_day.csv"
+Path = "~/Dokumente/Topics/Daten/7_day.csv"
 
 
 
@@ -45,11 +45,13 @@ bbbbbb = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()
 
 #pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[0]['bid']).interpolate() #Nummer in iloc = auktion 1
 
-plt.xlabel('Day of Auction')
-plt.ylabel('Bid Amount')
 
+#get auction data
 auction_one_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[30]['bid'])
 auction_one_bidtime = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[30]['bidtime'])
+
+auction_two_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[74]['bid'])
+auction_two_bidtime = a = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[74]['bidtime']) #74
 
 #original
 plt.scatter(auction_one_bidtime,auction_one_bid)
@@ -60,14 +62,11 @@ plt.scatter(auction_one_bidtime.drop(11).drop(18),auction_one_bid.drop(11).drop(
 plt.plot(auction_one_bidtime.drop(11).drop(18),auction_one_bid.drop(11).drop(18))
 
 #log
+plt.plot(auction_two_bidtime.drop(11).drop(18),np.log(auction_two_bid.drop(11).drop(18)))
 plt.scatter(auction_one_bidtime.drop(11).drop(18),np.log(auction_one_bid.drop(11).drop(18)))
-plt.plot(auction_one_bidtime.drop(11).drop(18),np.log(auction_one_bid.drop(11).drop(18)))
 
 
 
-
-auction_two_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[9]['bid'])
-auction_two_bidtime = a = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[9]['bidtime']) #74
 
 
 #Original
@@ -76,12 +75,17 @@ plt.plot(auction_two_bidtime,auction_two_bid)
 
 
 #cleaned
+
 plt.scatter(auction_two_bidtime.drop(1).drop(15),auction_two_bid.drop(1).drop(15))
 plt.plot(auction_two_bidtime.drop(1).drop(15),auction_two_bid.drop(1).drop(15))
 
 #log
+plt.xlabel('Day of Auction')
+plt.ylabel('log. Bid Amount')
 plt.scatter(auction_two_bidtime.drop(1).drop(15),np.log(auction_two_bid.drop(1).drop(15)))
 plt.plot(auction_two_bidtime.drop(1).drop(15),np.log(auction_two_bid.drop(1).drop(15)))
+
+plt.savefig('log_int.pdf')
 
 #Spline
 zz = UnivariateSpline(auction_two_bidtime.drop(1).drop(15), np.log(auction_two_bid.drop(1).drop(15)),k=1)

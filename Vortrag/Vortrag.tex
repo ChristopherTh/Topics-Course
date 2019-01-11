@@ -7,6 +7,17 @@ Prices and Their Dynamics Using
 Functional Data Analysis}   
 \author{Christopher Thiemann genannt Trappmann} 
 \date{January 29, 2019} 
+\beamertemplatenavigationsymbolsempty
+
+\setbeamercolor{footline}{fg=blue}
+\setbeamerfont{footline}{series=\bfseries}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
 
 \begin{document}
 
@@ -51,8 +62,8 @@ Data
 \end{frame}
 
 \begin{frame}{Bid-History} %erklärend bid spacing usw.
-\begin{minipage}[c]{0.6\textwidth}
-\includegraphics[width=\textwidth]{bid_history}
+\begin{minipage}[c]{0.65\textwidth}
+\includegraphics[width=\textwidth]{Auction_cleaned_scatter.pdf}
 \end{minipage}
 \hfill
 \begin{minipage}[c]{0.3\textwidth}
@@ -100,7 +111,18 @@ Data
 \end{frame}
 
 \begin{frame}{Irregular spacing of bids 2/3}
-%hier bild mit beiden log und linear interpoliert 
+\begin{minipage}[c]{0.65\textwidth}
+\includegraphics[width=\textwidth]{log_int.pdf}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.3\textwidth}
+\begin{itemize}
+\item log bids
+\item linear interpolate
+\item sampling from common grid
+\item bidsniping
+\end{itemize}
+\end{minipage} 
 \end{frame}
 
 \begin{frame}{Irregular spacing of bids 3/3}
@@ -113,7 +135,7 @@ Data
 \end{align*}
  %"representation of each auction" 
 
-polynomial spline
+polynomial spline %kjurzes bild an der tafel machen
 \begin{align*}
 f(t)=\beta_0+\beta_2t+\beta_2t^2+...+\sum_{l=q}^L \beta_{pl}(t-\tau_l)^p_+ \\ 
 \end{align*}
@@ -131,17 +153,15 @@ PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}
 
 \end{frame}
 
-\begin{frame}{price dynamics}
-
+\begin{frame}{price dynamics} % plot second deriv to first deriv, critic coult add confidence limits
+\center
+\includegraphics[width=1\textwidth]{smooth_velocity} %price increases monotonically, velocity stalls between 3 and 5
 \end{frame}
 
-\begin{frame}
-graph to graph
-\end{frame}
 
-\begin{frame}{Functional Regression Model}
+\begin{frame}{Functional Regression Model} %time variyn variable amouunt of bids, time invariant reserve price, critic nothing said about epsilon
 \begin{align}
-\mathbf{y}(t) = [y_1(t),...,y_N(t)] \nonumber \\ \mathbf{X}(t)=\mathbf{X} \nonumber \\ \mathbf{y}(t)=\mathbf{X}^T\beta(t)+\mathbf{\epsilon}(t) \nonumber
+\mathbf{y}(t) = [y_1(t),...,y_N(t)] \nonumber \\ \mathbf{X}(t)=\mathbf{X} \nonumber \\ \mathbf{y}(t)=\mathbf{X}^T\beta(t)+\mathbf{\epsilon}(t) \nonumber 
 \end{align}
 \end{frame}
 
@@ -155,15 +175,15 @@ graph to graph
 \end{itemize}
 \end{frame}
 
-\begin{frame}{estimated paramjeter curves for price evolution} %muss interpretation zu jedem bild kennen nicht nur das was ich sagen will falls zb frage kommt % die variablen die ich in data erkläre hier interpretation zeigen!!!
+\begin{frame}{estimated parameter curves for price evolution} %muss interpretation zu jedem bild kennen nicht nur das was ich sagen will falls zb frage kommt % die variablen die ich in data erkläre hier interpretation zeigen!!!  computed confidence limits with +-2 standart errors
 \center
 \includegraphics[width=0.7\textwidth]{price_evolution}
 \end{frame}
 
-\begin{frame}{estimated paramjeter curves for price velocity}
+\begin{frame}{estimated paramteter curves for price velocity}
 \center
-\includegraphics[width=0.7\textwidth]{price_velocity}
-\end{frame}
+\includegraphics[width=0.7\textwidth]{price_velocity} % resrv price am ende weit auseindaner bounds weil durch smoorthing schlecht schätzbar eher nicht
+\end{frame} %at any time opening bid and reserve price assosiated with higher price well known, not known before that  this holds during the whole auction,negative effect towrds end, opening bid positive effect on priceall the time but effect decreases, reason at hte beging not muczh information available except for opening bid but this changes over time, deriv always negative espacaly at the start and end, depress rate of price increase, puses bids closer to peoples cvaluation this decreases price dynamics, reserve price: assosicated with higher price but decreaes price dynamics seller rating: woukld thing actrs positivly but this is only the case  at the end of the auction,
 
 \begin{frame}{Dynamic forcasting model}
 Four components
