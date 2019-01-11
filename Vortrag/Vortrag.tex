@@ -185,6 +185,11 @@ PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}
 \includegraphics[width=0.7\textwidth]{price_velocity} % resrv price am ende weit auseindaner bounds weil durch smoorthing schlecht schätzbar eher nicht
 \end{frame} %at any time opening bid and reserve price assosiated with higher price well known, not known before that  this holds during the whole auction,negative effect towrds end, opening bid positive effect on priceall the time but effect decreases, reason at hte beging not muczh information available except for opening bid but this changes over time, deriv always negative espacaly at the start and end, depress rate of price increase, puses bids closer to peoples cvaluation this decreases price dynamics, reserve price: assosicated with higher price but decreaes price dynamics seller rating: woukld thing actrs positivly but this is only the case  at the end of the auction,
 
+\begin{frame}
+\centering
+The Dynamic Forecasting Model
+\end{frame}
+
 \begin{frame}{Dynamic forcasting model}
 Four components
 \begin{itemize}
@@ -195,7 +200,7 @@ Four components
 \end{itemize}	
 \end{frame}
 
-\begin{frame}{The model}
+\begin{frame}{The model} %explain notation
 \begin{equation}
 y(t|t-1)=\alpha+\sum_{i=1}^{Q}\beta_ix_i(t)+\sum_{j=1}^J\gamma_jD^{(j)}y(t|t-1)+\sum_{l=1}^L\eta_ly(t-l|t-l-1) \nonumber
 \end{equation}
@@ -210,21 +215,21 @@ y(t|t-1)=\alpha+\sum_{i=1}^{Q}\beta_ix_i(t)+\sum_{j=1}^J\gamma_jD^{(j)}y(t|t-1)+
 \begin{frame}{h-step-ahead prediction}
 \small
 \begin{equation}
-\tilde{y}(T+h|T)=\hat{\alpha}+\sum_{i=1}^{Q}\hat{\beta}_ix_i(T+h|T)+\sum_{j=1}^J\hat{\gamma}_j\hat{D}^{(j)}y(T+h|T)+\sum_{l=1}^L\hat{\eta}_l\tilde{y}(T+h-l|T) \nonumber
+\tilde{y}(T+h|T)=\hat{\alpha}+\sum_{i=1}^{Q}\hat{\beta}_ix_i(T+h|T)+\sum_{j=1}^J\hat{\gamma}_j\tilde{D}^{(j)}y(T+h|T)+\sum_{l=1}^L\hat{\eta}_l\tilde{y}(T+h-l|T) \nonumber
 \end{equation}
 \normalsize
 \newline
 Two challenges
 \begin{itemize}
-	\item at time $T \hat{D}^{(j)}y(T+h|T)$ is not known
+	\item at time $T \tilde{D}^{(j)}y(T+h|T)$ is not known
 	\item static predictors in $x_i$ do not change over time
 \end{itemize}
 \end{frame}
 
-\begin{frame}{forecasting price dynamics}
-We model $D^{(j)}y(t)$ as a polynomial in $t$ with autoregressive (AR) residuals
+\begin{frame}{forecasting price dynamics} %mind the notation! epsilon keine funktion 
+We model $D^{(j)}y(t|t-1)$ as a polynomial in $t$ with autoregressive (AR) residuals
 \begin{align}
-D^{(j)}y(t|t-1) =\sum_{k=0}^Ka_kt^k+\sum_{i=1}^Pb_ix_i(t)+u(t) \ \ \ t=1,...,T \nonumber \\ \\ u(t)=\sum_{i=1}^R\phi u(t-i)+\epsilon(t) \ \ \ \ \epsilon(t) \sim iidN(0,\sigma^2)
+D^{(j)}y(t|t-1) =\sum_{k=0}^Ka_kt^k+\sum_{i=1}^Pb_ix_i(t)+u(t) \ \ \ t=1,...,T \nonumber \\ \nonumber \\ u(t)=\sum_{i=1}^R\phi u(t-i)+\epsilon(t) \ \ \ \ \epsilon(t) \sim iidN(0,\sigma^2) \nonumber
 \end{align} 
 \end{frame}
 
@@ -237,11 +242,16 @@ D^{(j)}y(t|t-1) =\sum_{k=0}^Ka_kt^k+\sum_{i=1}^Pb_ix_i(t)+u(t) \ \ \ t=1,...,T \
 \end{itemize}	
 \end{frame}
 
-\begin{frame}{integrating static auction infromation}
-
+\begin{frame}{integrating static auction infromation}%opening bid has influence on price but this influnce vanishes over time
+\begin{itemize}
+	\item problem uncommon in time series analysis
+	\item opening bid
+	\item discounting
+	\item $\tilde{x}(t)=x\tilde{\beta}(t)$
+\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Algorithm Outline}
 
 \end{frame}
 
