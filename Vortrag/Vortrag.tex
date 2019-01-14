@@ -19,45 +19,87 @@ Functional Data Analysis}
     \insertframenumber/\inserttotalframenumber
 }
 
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows,chains}
+
+\tikzset{
+  startstop/.style={
+    rectangle, 
+    rounded corners,
+    minimum width=3cm, 
+    minimum height=1cm,
+    align=center, 
+    draw=black, 
+    fill=red!30
+    },
+  process/.style={
+    rectangle, 
+    minimum width=3cm, 
+    minimum height=1cm, 
+    align=center, 
+    draw=black, 
+    fill=blue!30
+    },
+  decision/.style={
+    rectangle, 
+    minimum width=3cm, 
+    minimum height=1cm, align=center, 
+    draw=black, 
+    fill=green!30
+    },
+  arrow/.style={thick,->,>=stealth},
+  dec/.style={
+    ellipse, 
+    align=center, 
+    draw=black, 
+    fill=green!30
+    },
+}
+
 \begin{document}
 
 \begin{frame}
 \titlepage
 \end{frame}
 
+
+
+
+
 \begin{frame}{Introduction} %feel free to ask questions ?
 \begin{itemize}
-	\item Why did I choose the paper? %"Interested in how to apply the methods we leanred here, some background in auction theory here in my bachelöors"
-	\item Here focus on the (functional) methods beeing used.
+    \item Why did I choose the paper? %"Interested in how to apply the methods we learned here, some background in auction theory here in my bachelöors"
+    \item Here focuses on the (functional) methods being used.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Overview}
 \begin{itemize}
-	\item Why auctions? %"name some applications" auctions pupular %name examples
-	\item Why dynamic functional forcasting model?
-	\begin{itemize}
-		\item deal with unevenly spaced observations
-		\item capture price dynamics
-	\end{itemize}	
+    \item Why auctions? %"name some applications" auctions popular %name examples
+    \item Why dynamic functional forecasting model?
+    \begin{itemize}
+        \item deal with unevenly spaced observations
+        \item capture price dynamics
+    \end{itemize}    
 \end{itemize}
 overall structure of the paper
 \begin{itemize}
-	\item use Functional regression to explore price evolution and velocity
-	\item use results to build the forecasting model
+    \item use Functional regression to explore price evolution and velocity
+    \item use results to build the forecasting model
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Auction Framework}
 \begin{itemize}
-	\item ebay
-	\item second price sealed bid with proxy bidding
+    \item ebay
+    \item second price sealed bid with proxy bidding
 \end{itemize}
 Data
 \begin{itemize}
-	\item 7 Day Auctions
-	\item Microsoft Xbox and Harry Potter and the half blood prince
-	\item Responds Variable: Bid History
+    \item 7 Day Auctions
+    \item Microsoft Xbox and Harry Potter and the half blood prince
+    \item Responds Variable: Bid History
 \end{itemize}
 \end{frame}
 
@@ -76,26 +118,26 @@ Data
 \end{minipage}
 \end{frame}
 
-\begin{frame}{Auction Framework} %maybe not completelyy trivial if for examplke second highest bid bnelow reserve price
+\begin{frame}{Auction Framework} %maybe not completely trivial if for example second highest bid below reserve price
 \begin{itemize}
-	\item ebay
-	\item second price sealed bid with proxy bidding
+    \item ebay
+    \item second price sealed bid with proxy bidding
 \end{itemize}
 Data
 \begin{itemize}
-	\item 7 Day Auctions
-	\item Microsoft Xbox and Harry Potter and the half blood prince
-	\item Responds Variable: Bid History
-	\item Explanatory variables: opening bid, final price, number of bids, seller rating, bidder rating, reserve price, condition, early bidding, jump bidding
+    \item 7 Day Auctions
+    \item Microsoft Xbox and Harry Potter and the half blood prince
+    \item Responds Variable: Bid History
+    \item Explanatory variables: opening bid, final price, number of bids, seller rating, bidder rating, reserve price, condition, early bidding, jump bidding
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Functional Regression}
 \begin{itemize}
-	\item use FR to explore price dynamics
-	\item relate functional responds variable to scalar covariates
-	\item Modeltype: $\mathbf{y}(t)=\mathbf{X}^T\beta(t)+\mathbf{\epsilon}(t)$ %put emphasise on y(t) in comparison to the lecturre weher it was a scalar ,,,,,explain notation fett y ids vector of functions but i will talk about it in more detail later, if we plug in y'(t) we can model price velocity, critic no assumption on epsiloin?
-	\item before however: recover functional data
+    \item use FR to explore price dynamics
+    \item relate functional response variable to scalar covariates
+    \item Model-type: $\mathbf{y}(t)=\mathbf{X}^T\beta(t)+\mathbf{\epsilon}(t)$ %put emphasize on y(t) in comparison to the lecture weather it was a scalar,,,,, explain notation fett y ids vector of functions but I will talk about it in more detail later, if we plug in y'(t) we can model price velocity, critic no assumption on epsilon?
+    \item before however: recover functional data
 \end{itemize}
 \end{frame}
 
@@ -131,7 +173,7 @@ Data
 
 \begin{frame}{Penalized smoothing spline}
 \begin{align*}
-\mathbf{y}^{(j)}=(y_1^{(j)},...,y_n^{(j)}) \ \ \ \ \ \	 j=1,...,N 
+\mathbf{y}^{(j)}=(y_1^{(j)},...,y_n^{(j)}) \ \ \ \ \ \     j=1,...,N 
 \end{align*}
  %"representation of each auction" 
 
@@ -180,10 +222,10 @@ PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}
 \includegraphics[width=0.7\textwidth]{price_evolution}
 \end{frame}
 
-\begin{frame}{estimated paramteter curves for price velocity}
+\begin{frame}{estimated parameter curves for price velocity}
 \center
-\includegraphics[width=0.7\textwidth]{price_velocity} % resrv price am ende weit auseindaner bounds weil durch smoorthing schlecht schätzbar eher nicht
-\end{frame} %at any time opening bid and reserve price assosiated with higher price well known, not known before that  this holds during the whole auction,negative effect towrds end, opening bid positive effect on priceall the time but effect decreases, reason at hte beging not muczh information available except for opening bid but this changes over time, deriv always negative espacaly at the start and end, depress rate of price increase, puses bids closer to peoples cvaluation this decreases price dynamics, reserve price: assosicated with higher price but decreaes price dynamics seller rating: woukld thing actrs positivly but this is only the case  at the end of the auction,
+\includegraphics[width=0.7\textwidth]{price_velocity} % reserve price am ende weit auseindaner bounds weil durch smoothing schlecht schätzbar eher nicht
+\end{frame} %at any time opening bid and reserve price associated with higher price well known, not known before that  this holds during the whole auction,negative effect towards end, opening bid positive effect on price all the time but effect decreases, reason at the beginning not much information available except for opening bid but this changes over time, driven always negative especially at the start and end, depress rate of price increase, pushes bids closer to peoples evaluation this decreases price dynamics, reserve price: associated with higher price but decreases price dynamics seller rating: would thing actrs positively but this is only the case  at the end of the auction,
 
 \begin{frame}
 \centering
@@ -193,11 +235,11 @@ The Dynamic Forecasting Model
 \begin{frame}{Dynamic forcasting model}
 Four components
 \begin{itemize}
-	\item static predictor variables
-	\item time-varying predictor variables
-	\item price dynamics
-	\item price lags
-\end{itemize}	
+    \item static predictor variables
+    \item time-varying predictor variables
+    \item price dynamics
+    \item price lags
+\end{itemize}    
 \end{frame}
 
 \begin{frame}{The model} %explain notation
@@ -206,9 +248,9 @@ y(t|t-1)=\alpha+\sum_{i=1}^{Q}\beta_ix_i(t)+\sum_{j=1}^J\gamma_jD^{(j)}y(t|t-1)+
 \end{equation}
 \newline \\
 \begin{itemize}
-	\item $x_1,...x_Q$ is the set of static and time variying predictors
-	\item $D^{(j)}y(t|t-1)$ is the jth derivative
-	\item $y(t-l|t-l-1)$ price lags
+    \item $x_1,...x_Q$ is the set of static and time variying predictors
+    \item $D^{(j)}y(t|t-1)$ is the jth derivative
+    \item $y(t-l|t-l-1)$ price lags
 \end{itemize}
 \end{frame}
 
@@ -221,8 +263,8 @@ y(t|t-1)=\alpha+\sum_{i=1}^{Q}\beta_ix_i(t)+\sum_{j=1}^J\gamma_jD^{(j)}y(t|t-1)+
 \newline
 Two challenges
 \begin{itemize}
-	\item at time $T \tilde{D}^{(j)}y(T+h|T)$ is not known
-	\item static predictors in $x_i$ do not change over time
+    \item at time $T \tilde{D}^{(j)}y(T+h|T)$ is not known
+    \item static predictors in $x_i$ do not change over time
 \end{itemize}
 \end{frame}
 
@@ -235,24 +277,38 @@ D^{(j)}y(t|t-1) =\sum_{k=0}^Ka_kt^k+\sum_{i=1}^Pb_ix_i(t)+u(t) \ \ \ t=1,...,T \
 
 \begin{frame}{forcasting price dynamics}
 \begin{itemize}
-	\item get estimates for all $a_k$, $b_i$ and $u(t)$
-	\item use estimated residuals to estimate all $\phi_i$
-	\item estimate next resdidual with \begin{equation}  \tilde{u}(T+1|T)=\sum_{i=1}^R\tilde{\phi}_iu(T-i+1) \nonumber \end{equation}
-	\item lastly estimate the price derivative \begin{equation} D^{(j)}\tilde{y}(T+1|T) =\sum_{k=0}^K\hat{a}_k(T+1)^k+\sum_{i=1}^P\hat{b}_ix_i(T+1|T)+\tilde{u}(T+1|T) \nonumber \end{equation}
-\end{itemize}	
+    \item get estimates for all $a_k$, $b_i$ and $u(t)$
+    \item use estimated residuals to estimate all $\phi_i$
+    \item estimate next resdidual with \begin{equation}  \tilde{u}(T+1|T)=\sum_{i=1}^R\tilde{\phi}_iu(T-i+1) \nonumber \end{equation}
+    \item lastly estimate the price derivative \begin{equation} D^{(j)}\tilde{y}(T+1|T) =\sum_{k=0}^K\hat{a}_k(T+1)^k+\sum_{i=1}^P\hat{b}_ix_i(T+1|T)+\tilde{u}(T+1|T) \nonumber \end{equation}
+\end{itemize}    
 \end{frame}
 
-\begin{frame}{integrating static auction infromation}%opening bid has influence on price but this influnce vanishes over time
+\begin{frame}{integrating static auction infromation}%opening bid has influence on price but this influence vanishes over time
 \begin{itemize}
-	\item problem uncommon in time series analysis
-	\item opening bid
-	\item discounting
-	\item $\tilde{x}(t)=x\tilde{\beta}(t)$
+    \item problem uncommon in time series analysis
+    \item opening bid
+    \item discounting
+    \item $\tilde{x}(t)=x\tilde{\beta}(t)$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Algorithm Outline}
+\begin{frame}{Algorith Outline}
+\centering
 
+%\resizebox{!}{.8\textheight}{% if required
+\begin{tikzpicture}[
+  start chain=going below,
+  every join/.style={arrow},
+  node distance=0.6cm
+  ]
+\node (start) [process,on chain,join] {1. Turn statics predictors into time \\ -varying predictors for the price evolution curves and their dynamic \\ curves via functional regression model};
+\node (in1) [process,on chain] {2. Fit polynomial trended linear \\ regeression model (7) with AR residuals to pricedynamics \\ with time \\ varinyg predictors.};
+\node (out1) [process,on chain,join] {3. Forecast price dynamics  \\ from time T using the estimated model (11) \\ with time varinyg predictors};
+\node (out2) [process,on chain,join] {4. Forecast the price evolution from \\ time T via regression model (6) that includes  \\ forecasted price-dynamics + time-varinyg predictors};
+\draw[arrow] (start) -- node[left] {} (in1);
+\end{tikzpicture}%
+%}
 \end{frame}
 
 \begin{frame}{Conclusion}
