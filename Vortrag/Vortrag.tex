@@ -64,15 +64,18 @@ Functional Data Analysis}
 \end{frame}
 
 
-
-
-
-\begin{frame}{Introduction} %feel free to ask questions ?
-\begin{itemize}
-    \item Why did I choose the paper? %"Interested in how to apply the methods we learned here, some background in auction theory here in my bachelöors"
-    \item Here focuses on the (functional) methods being used.
-\end{itemize}
+\begin{frame}
+\centering
+Introduction
 \end{frame}
+
+
+%\begin{frame}{Introduction} %feel free to ask questions ?
+%\begin{itemize}
+%    \item Why did I choose the paper? %"Interested in how to apply the methods we learned here, some background in auction theory here in my bachelöors"
+%    \item Here focuses on the (functional) methods being used.
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}{Overview}
 \begin{itemize}
@@ -141,63 +144,103 @@ Data
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Irregular spacing of bids 1/3}
+
+\begin{frame}
 \centering
-\begin{minipage}[c]{0.6\textwidth}
-\includegraphics[width=\textwidth]{Auction1}
-\end{minipage}
+Penalized smoothing spline
+\end{frame}
+
+
+%\begin{frame}{Irregular spacing of bids}
+%\centering
+%\begin{minipage}[c]{0.6\textwidth}
+%\includegraphics[width=\textwidth]{Auction1}
+%\end{minipage}
 %\hfill
-\begin{minipage}[c]{0.6\textwidth}
-\includegraphics[width=\textwidth]{Auction2}
-\end{minipage}
+%\begin{minipage}[c]{0.6\textwidth}
+%\includegraphics[width=\textwidth]{Auction2}
+%\end{minipage}
+%\end{frame}
+
+%\begin{frame}{Irregular spacing of bids}
+%\begin{minipage}[c]{0.65\textwidth}
+%\includegraphics[width=\textwidth]{log_int.pdf}
+%\end{minipage}
+%\hfill
+%\begin{minipage}[c]{0.3\textwidth}
+%\begin{itemize}
+%\item log bids
+%\item linear interpolate
+%\item sampling from $t=t_1,...,t_n$
+%\item bidsniping
+%\end{itemize}
+%\end{minipage} 
+%\end{frame}
+
+
+\begin{frame}{Penalized smoothing spline - general new }
+Motivation % K only gicvves discrete choice of degree of smoothnes notation erklärend j supressed for ease of notation
+\begin{align*} 
+y_i=x(t_i)+\epsilon_i \\ x(t)=\sum_{k=1}^Kc_k\phi_k(t)=\mathbf{c'}\boldsymbol{\phi} \\ 
+SMSSE(\mathbf{y}|\mathbf{c})=\sum_{i=1}^n[y_i-\sum_{k=1}^Kc_k\phi_k(t_j)]^2
+\end{align*}
+
+measure for variability
+\begin{align*}
+PEN_m(x)=\int[D^mx(s)]^2ds
+\end{align*}
+\end{frame} %lambda controls bias variance tradeoff
+
+
+\begin{frame}{Penalized smoothing spline - general new } %x twice differntiable
+\begin{align*}
+PENNSSE^{m}_{\lambda}(x|\mathbf{y})=\sum_{i=1}^n (y_i^{}-x^{}(t_i))^2+\lambda PEN_m(x)
+\end{align*}
+$\lambda = $ smoothing parameter
+$\lambda \rightarrow \infty $ OLS
+$\lambda = $ linear interpolant
+
 \end{frame}
 
-\begin{frame}{Irregular spacing of bids 2/3}
-\begin{minipage}[c]{0.65\textwidth}
-\includegraphics[width=\textwidth]{log_int.pdf}
-\end{minipage}
-\hfill
-\begin{minipage}[c]{0.3\textwidth}
-\begin{itemize}
-\item log bids
-\item linear interpolate
-\item sampling from common grid
-\item bidsniping
-\end{itemize}
-\end{minipage} 
-\end{frame}
 
-\begin{frame}{Irregular spacing of bids 3/3}
-%bild aus denenn von oben an einem common point gezogen wurde wie legt man diese puunkte ?? 
-\end{frame}
-
-\begin{frame}{Penalized smoothing spline}
+\begin{frame}{Penalized smoothing spline - general old }
 \begin{align*}
 \mathbf{y}^{(j)}=(y_1^{(j)},...,y_n^{(j)}) \ \ \ \ \ \     j=1,...,N 
 \end{align*}
  %"representation of each auction" 
 
-polynomial spline %kjurzes bild an der tafel machen
+truncated polynomial spline %kjurzes bild an der tafel machen 
 \begin{align*}
 f(t)=\beta_0+\beta_2t+\beta_2t^2+...+\sum_{l=q}^L \beta_{pl}(t-\tau_l)^p_+ \\ 
 \end{align*}
-penalized smoothing spline
+penalized smoothing spline %minimize wrts to betas
 \begin{align*}
-PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}_m \int_{}^{}D^mf(s)^2 ds %wie bestimmt man lambda und m und knots?
+PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}_m \int_{t_1}^{t_n}D^mf(s)^2 ds %wie bestimmt man lambda und m und knots?
 \end{align*}
 \end{frame}
 
-\begin{frame}{bild mit knots}
 
+\begin{frame}{Penalized smoothing spline - paper}
+m = 5 lambda begrpnden knots begründen usw.
 \end{frame}
 
-\begin{frame}{bild mit verschiedene lkambdas 3 lambda gleich 0 genau richtig zu hoch}
+%\begin{frame}{bild mit knots}
 
-\end{frame}
+%\end{frame}
+
+%\begin{frame}{bild mit verschiedene lkambdas 3 lambda gleich 0 genau richtig zu hoch}
+
+%\end{frame}
 
 \begin{frame}{price dynamics} % plot second deriv to first deriv, critic coult add confidence limits
 \center
 \includegraphics[width=1\textwidth]{smooth_velocity} %price increases monotonically, velocity stalls between 3 and 5
+\end{frame}
+
+
+\begin{frame}
+\centering
+Functional Regression
 \end{frame}
 
 
@@ -207,7 +250,7 @@ PENN^{(j)}_{\lambda,m}=\sum_{i=1}^n (y_i^{(j)}-f^{(j)}(t_i))^2+\lambda PEN^{(j)}
 \end{align}
 \end{frame}
 
-\begin{frame}{Estimating the model}
+\begin{frame}{Estimating the model} %problem aufschreiben um zu zeigen das es nicht so einfahc ist wie aes ausieht, different methods available
 \begin{itemize}
 \item different approaches
 \item fix a grid $t=t_1,...t_G$
