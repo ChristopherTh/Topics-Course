@@ -8,7 +8,7 @@ Path = "~/Dokumente/Topics/Daten/7_day.csv"
 
 
 auction_data = pd.read_csv(Path)
-
+auction_data_palm = pd.read_csv("~/Dokumente/Topics/Daten/palm.csv")
 
 
 #print(auction_data.describe())
@@ -27,7 +27,7 @@ auction_data = pd.read_csv(Path)
 
 
 
-a = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[75]['bid']).interpolate()
+a = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[90]['bid']).interpolate()
 bbbbbb = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[9]['bidtime'])
 
 #y = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[75]['bid'])
