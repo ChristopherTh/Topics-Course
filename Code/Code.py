@@ -47,8 +47,8 @@ bbbbbb = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()
 
 
 #get auction data
-auction_one_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[30]['bid'])
-auction_one_bidtime = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[30]['bidtime'])
+auction_one_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[36]['bid'])
+auction_one_bidtime = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[36]['bidtime'])
 
 auction_two_bid = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[74]['bid'])
 auction_two_bidtime = a = pd.DataFrame(auction_data.groupby('auctionid').agg(lambda x: x.tolist()).iloc[74]['bidtime']) #74
