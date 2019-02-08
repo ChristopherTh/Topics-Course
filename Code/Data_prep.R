@@ -22,14 +22,7 @@ xbox <- xbox %>% select(-auctionid)
 
 plot(xbox[xbox$group_id==28,][,2],xbox[xbox$group_id==28,][,1])
 
-time1 <- data[data$group_id==269,][,2]
-bids1 <- data[data$group_id==269,][,1]
 
-time2 <- data_raw[data_raw$group_id==269,][,2]
-bids2 <- data_raw[data_raw$group_id==269,][,1]
-
-plot(time1,bids1)
-plot(time2,bids2)
 
 
 for (j in 1:max(data$group_id)) {
@@ -38,15 +31,18 @@ for (j in 1:max(data$group_id)) {
   aux <- integer(length(bids))
   for (i in 1:length(bids)){
     
-    
-    
     if (i == 1) {
-      aux[i] <- bids[i]
-    } else {
+      #aux[i] <- bids[i]
+      bids[i] <- data_raw[data_raw$group_id == j,][1,5]
+    }
+    
+    
       
         if (bids[i] > max(bids[1:(i-1)])) {
           
-          if ( 0.01 < bids[i] | bids[i] < 0.99) {
+          
+          
+          if ( 0.01 <= bids[i] | bids[i] < 0.99) {
             aux[i] <- bids[i-1] + 0.05
           } else if ( 1 < bids[i] | bids[i] < 4.99) {
             aux[i] <- bids[i-1] + 0.25
@@ -71,7 +67,9 @@ for (j in 1:max(data$group_id)) {
           
         } else {
           
-          if ( 0.01 < bids[i] | bids[i] < 0.99) {
+          
+          
+          if ( 0.01 <= bids[i] | bids[i] < 0.99) {
             aux[i] <- bids[i] + 0.05
           } else if ( 1 < bids[i] | bids[i] < 4.99) {
             aux[i] <- bids[i] + 0.25
@@ -93,17 +91,57 @@ for (j in 1:max(data$group_id)) {
           else {
             aux[i] <- bids[i] + 100
           }
-      }
-        
-        
+        }
+    if (i == 1) {
+      #aux[i] <- bids[i]
+      bids[i] <- data_raw[data_raw$group_id == j,][,1][1]
     }
+        
+        
+    
     
   }
   data[data_raw$group_id == j,][,1] <- aux
 }  
 
+time1 <- data[data$group_id==269,][,2]
+bids1 <- data[data$group_id==269,][,1]
 
+time2 <- data_raw[data_raw$group_id==269,][,2]
+bids2 <- data_raw[data_raw$group_id==269,][,1]
 
+plot(time1,bids1)
+plot(time2,bids2)
+percentChange(data[data$group_id == 1,][,1])
+################## Adding Number of bids Variable #######################
+data["number_of_bids"] <- 0
 
+for (i in 1:max(data$group_id)) {
+  data[data$group_id == i,8] <- 1:length(data_raw[data_raw$group_id == i,][,1])
+}
+
+################# Adding dummy variable 'early bidding'   ####################
+data["early_bidding"] <- 0
+
+for (i in 1:max(data$group_id)) {
+  if (sum(data[data$group_id == i,2] <= 1.5)> 0.5) {
+    data[data$group_id == i,9] <- rep(1,length(data_raw[data_raw$group_id == i,][,1]))
+  } else {
+    data[data$group_id == i,9] <- rep(0,length(data_raw[data_raw$group_id == i,][,1]))
+    
+  }
+}
+
+################ Addin jump bidding Dummy ########################
+data["jump_bidding"] <- NA
+
+for (i in 1:max(data$group_id)) {
   
+  if (             sum((data[data$group_id == i,][,1]/(lag(data[data$group_id == i,][,1],1)) -1    )        > 0.3,na.rm = TRUE) > 0.5) {
+    data[data$group_id == i,10] <- rep(1,length(data_raw[data_raw$group_id == i,][,1]))
+  } else {
+    data[data$group_id == i,10] <- rep(0,length(data_raw[data_raw$group_id == i,][,1]))
+    
+  }
+}
 
