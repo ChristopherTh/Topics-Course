@@ -112,7 +112,6 @@ bids2 <- data_raw[data_raw$group_id==269,][,1]
 
 plot(time1,bids1)
 plot(time2,bids2)
-percentChange(data[data$group_id == 1,][,1])
 ################## Adding Number of bids Variable #######################
 data["number_of_bids"] <- 0
 
@@ -144,4 +143,61 @@ for (i in 1:max(data$group_id)) {
     
   }
 }
+############# log the bids ################
+data_log <- data
+data_log[,1] <- log(data[,1])
 
+############ linear interpolate and sampole from grid ######################
+grid1 <- c(0, 1, 2, 3, 4, 5, 6, 6.25, 6.5, 6.75, 6.8125, 6.875, 6.9375, 7)
+grid <- seq(0, 7, len = 50)
+auctions <- matrix(1,length(grid),max(data$group_id))
+for (i in 1:max(data$group_id)) {
+  
+  if (length(data_log[data_log$group_id == i,][,1]) == 1) {
+    
+    auctions[,i] <- approx(data_log[data_log$group_id == i,][,2] , y = data_log[data_log$group_id == i,][,1] , grid , method="constant" , rule = 0)$y
+  } else {
+    auctions[,i] <- approx(data_log[data_log$group_id == i,][,2] , y = data_log[data_log$group_id == i,][,1] , grid , method="linear" , rule = 0)$y
+  }
+}
+
+########## Splines #############
+
+test   <- smooth.spline(grid, auctions[,204] ,df = 5)
+plot(grid ,auctions[,204])
+lines(predict(test, grid))
+#Plot first deriv
+plot(grid,predict(test, grid, deriv = 1)$y)
+lines(predict(test, grid, deriv = 1))
+# plot second deriv
+plot(grid,predict(test, grid, deriv = 2)$y)
+lines(predict(test, grid, deriv = 2))
+# plot third deriv
+plot(grid,predict(test, grid, deriv = 3)$y)
+lines(predict(test, grid, deriv = 3))
+
+auxauxaux <- tp(auctions[,269], degree=3, k=53, by=NULL, allPen=FALSE, varying=NULL, diag=FALSE,
+   knots=c(0, 1, 2, 3, 4, 5, 6, 6.25, 6.5, 6.75, 6.8125, 6.875, 6.9375, 7), 
+   centerscale=NULL, scaledknots=FALSE)
+
+plot(grid,auxauxaux$X)
+plot(grid,auctions[,269])
+lines(grid,auxauxaux$X)
+
+
+
+########## FDA ################
+
+ aaaaa <- Data2fd(grid, y=auctions, basisobj=NULL, nderiv=NULL,
+        lambda=3e-8/diff(as.numeric(range(grid))),
+        fdnames=NULL, covariates=NULL, method="chol",
+        dfscale=1)
+plot(aaaaa)
+fRegress(aaaaa, )
+plot(mean.fd(aaaaa))
+create.bspline.irregular(auctions[,269],
+                         nbasis=max(norder, round(sqrt(length(auctions[,269])))),
+                         norder=4,
+                         breaks=auctions[,269],
+                         dropind=NULL, quadvals=NULL, values=NULL,
+                         basisvalues=NULL, names="bspl", plot.=TRUE)
