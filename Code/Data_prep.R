@@ -1,4 +1,6 @@
 library(dplyr)
+library(fda)
+library(cplm)
 #load data
 xbox <- read.csv(file="~/Dokumente/Topics/Daten/7_day.csv")
 palm <- read.csv(file="~/Dokumente/Topics/Daten/palm.csv")
@@ -7,7 +9,8 @@ palm <- read.csv(file="~/Dokumente/Topics/Daten/palm.csv")
 data_raw <- rbind(palm,xbox)
 
 data <- rbind(palm,xbox)
-
+data <- na.omit(data)
+data_raw <- na.omit(data_raw)
 #group auctions by there id
 data_raw$group_id <- data_raw %>% group_indices(auctionid) 
 data_raw <- data_raw %>% select(-auctionid)
@@ -143,6 +146,20 @@ for (i in 1:max(data$group_id)) {
     
   }
 }
+########### adding curent average bidder rating   #########################
+data["avg. bidder rating"] <- 1
+for (i in 1:max(data$group_id)) {
+ 
+  for (j in 1:length(data[data$group_id == i,][,1])) {
+    
+    data[data$group_id == i,11][j] <- sum(data[data$group_id == i,4][1:j])/j
+    
+  }
+   
+}
+
+
+
 ############# log the bids ################
 data_log <- data
 data_log[,1] <- log(data[,1])
@@ -161,9 +178,35 @@ for (i in 1:max(data$group_id)) {
   }
 }
 
+# number of bids
+num_of_bids <- matrix(1,length(grid),max(data$group_id))
+
+for (i in 1:max(data$group_id)) {
+  
+  if (length(data_log[data_log$group_id == i,][,1]) == 1) {
+    
+    num_of_bids[,i] <- approx(data_log[data_log$group_id == i,][,2] , y = data_log[data_log$group_id == i,][,'number_of_bids'] , grid , method="constant" , rule = 0)$y
+  } else {
+    num_of_bids[,i] <- approx(data_log[data_log$group_id == i,][,2] , y = data_log[data_log$group_id == i,][,8] , grid , method="constant" , rule = 0)$y
+  }
+}
+
+# current avg bidder rating
+avg_bidder_rating <- matrix(1,length(grid),max(data$group_id))
+
+for (i in 1:max(data$group_id)) {
+  
+  if (length(data[data$group_id == i,][,1]) == 1) {
+    
+    avg_bidder_rating[,i] <- approx(data[data$group_id == i,][,2] , y = data[data$group_id == i,]['avg. bidder rating'] , grid , method="constant" , rule = 0)$y
+  } else {
+    avg_bidder_rating[,i] <- approx(data[data$group_id == i,][,2] , y = data[data$group_id == i,][,'avg. bidder rating'] , grid , method="linear" , rule = 0)$y
+  }
+}
+
 ########## Splines #############
 
-test   <- smooth.spline(grid, auctions[,204] ,df = 5)
+test   <- smooth.spline(grid, auctions[,204] ,df = 4)
 plot(grid ,auctions[,204])
 lines(predict(test, grid))
 #Plot first deriv
@@ -176,28 +219,58 @@ lines(predict(test, grid, deriv = 2))
 plot(grid,predict(test, grid, deriv = 3)$y)
 lines(predict(test, grid, deriv = 3))
 
-auxauxaux <- tp(auctions[,269], degree=3, k=53, by=NULL, allPen=FALSE, varying=NULL, diag=FALSE,
-   knots=c(0, 1, 2, 3, 4, 5, 6, 6.25, 6.5, 6.75, 6.8125, 6.875, 6.9375, 7), 
-   centerscale=NULL, scaledknots=FALSE)
+#auxauxaux <- tp(auctions[,269], degree=3, k=53, by=NULL, allPen=FALSE, varying=NULL, diag=FALSE,
+#   knots=c(0, 1, 2, 3, 4, 5, 6, 6.25, 6.5, 6.75, 6.8125, 6.875, 6.9375, 7), 
+#   centerscale=NULL, scaledknots=FALSE)
+#
+#plot(grid,auxauxaux$X)
+#plot(grid,auctions[,269])
+#lines(grid,auxauxaux$X)
 
-plot(grid,auxauxaux$X)
-plot(grid,auctions[,269])
-lines(grid,auxauxaux$X)
+###########constructing design matrix
+my.array <- array(NA,dim=c(max(data$group_id),7,length(grid1)))
 
-
+for (i in 1:max(data$group_id)) {
+  
+  
+  # bids
+  aux <- smooth.spline(grid, auctions[,i] ,df = 4)
+  my.array[i,1,] <- predict(aux,grid1)$y
+  
+  # opening bid
+  my.array[i,2,] <- data_log[data_log$group_id == i,][1,5]
+  
+  # final price
+  my.array[i,3,] <- data_log[data_log$group_id == i,][1,6]
+  
+  # early bidding
+  my.array[i,4,] <- data_log[data_log$group_id == i,][1,9]
+  
+  ## jump bidding 
+  my.array[i,5,] <- data_log[data_log$group_id == i,][1,10]
+  
+  ## number of bids
+  aux1 <- smooth.spline(grid, num_of_bids[,i] ,df = 4)
+  my.array[i,6,] <- predict(aux1,grid1)$y
+  # average bidder rating
+  aux2 <- smooth.spline(grid, avg_bidder_rating[,i] ,df = 4)
+  my.array[i,7,] <- predict(aux2,grid1)$y
+}
 
 ########## FDA ################
+plot(my.array[,1,1], my.array[,7,1])
 
- aaaaa <- Data2fd(grid, y=auctions, basisobj=NULL, nderiv=NULL,
-        lambda=3e-8/diff(as.numeric(range(grid))),
-        fdnames=NULL, covariates=NULL, method="chol",
-        dfscale=1)
-plot(aaaaa)
-fRegress(aaaaa, )
-plot(mean.fd(aaaaa))
-create.bspline.irregular(auctions[,269],
-                         nbasis=max(norder, round(sqrt(length(auctions[,269])))),
-                         norder=4,
-                         breaks=auctions[,269],
-                         dropind=NULL, quadvals=NULL, values=NULL,
-                         basisvalues=NULL, names="bspl", plot.=TRUE)
+linearMod <- lm(my.array[,1,9] ~ my.array[,2:7,9], data=as.data.frame(my.array))$coefficients
+summary(linearMod)
+
+container <- array(NA,dim=c(14,14))
+
+for (i in 1:14) {
+  
+  container[,i] <- lm(my.array[,1,i] ~ my.array[,2:7,i], data=as.data.frame(my.array))$coefficients
+  
+}
+
+plot(grid1,container[2,])
+lines(grid1,container[2,])
+
